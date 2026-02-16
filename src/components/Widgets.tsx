@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { CheckCircle2, AlertCircle, Info, X, Search, Filter } from "lucide-react";
 
 interface ToggleProps {
   defaultOn?: boolean;
@@ -25,13 +26,13 @@ export function Toggle({ defaultOn = false, onToggle, label }: ToggleProps) {
       aria-checked={isOn}
       aria-label={label}
       onClick={toggle}
-      className={`relative w-12 h-7 rounded-full transition-colors duration-200 cursor-pointer ${
-        isOn ? "bg-[var(--accent-green)]" : "bg-[var(--text-muted)]"
+      className={`relative w-12 h-7 rounded-full transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 focus:ring-offset-[var(--bg-card)] ${
+        isOn ? "bg-[var(--accent-green)] shadow-[0_0_12px_var(--accent-green-soft)]" : "bg-[var(--bg-input)] border border-[var(--border)]"
       }`}
     >
       <span
-        className={`absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform duration-200 ${
-          isOn ? "translate-x-5" : "translate-x-0"
+        className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ${
+          isOn ? "translate-x-5" : "translate-x-0.5"
         }`}
       />
     </button>
@@ -54,34 +55,34 @@ interface NotificationProps {
  */
 export function Notification({ type, message, onDismiss }: NotificationProps) {
   const styles: Record<NotificationType, string> = {
-    success: "border-[rgba(63,185,80,0.3)] bg-[var(--accent-green-soft)] text-[var(--accent-green)]",
-    error: "border-[rgba(248,81,73,0.3)] bg-[var(--accent-red-soft)] text-[var(--accent-red)]",
-    info: "border-[rgba(88,166,255,0.3)] bg-[var(--accent-soft)] text-[var(--accent)]",
+    success: "border-[var(--accent-green-border)] bg-[var(--accent-green-soft)] text-[var(--accent-green)]",
+    error: "border-[var(--accent-red-border)] bg-[var(--accent-red-soft)] text-[var(--accent-red)]",
+    info: "border-[var(--border-accent)] bg-[var(--accent-soft)] text-[var(--accent)]",
   };
 
-  const icons: Record<NotificationType, string> = {
-    success: "✓",
-    error: "✕",
-    info: "ℹ",
-  };
+  const Icon = {
+    success: CheckCircle2,
+    error: AlertCircle,
+    info: Info,
+  }[type];
 
   return (
     <div
       role="status"
       data-testid="notification"
-      className={`flex items-center justify-between p-4 rounded-xl border ${styles[type]}`}
+      className={`flex items-start gap-3 p-4 rounded-xl border shadow-sm backdrop-blur-sm animate-fade-in ${styles[type]}`}
     >
-      <div className="flex items-center gap-3">
-        <span className="text-lg">{icons[type]}</span>
-        <p className="text-sm font-medium">{message}</p>
+      <Icon className="w-5 h-5 shrink-0 mt-0.5" />
+      <div className="flex-1">
+        <p className="text-sm font-medium leading-relaxed">{message}</p>
       </div>
       {onDismiss && (
         <button
           onClick={onDismiss}
           aria-label="Dismiss notification"
-          className="text-inherit opacity-60 hover:opacity-100 transition-opacity cursor-pointer text-lg"
+          className="text-inherit opacity-60 hover:opacity-100 transition-opacity cursor-pointer p-0.5 rounded-md hover:bg-black/5"
         >
-          ×
+          <X className="w-4 h-4" />
         </button>
       )}
     </div>
@@ -114,28 +115,40 @@ export function SearchFilter<T>({
     : items;
 
   return (
-    <div className="space-y-3">
-      <input
-        type="text"
-        placeholder={placeholder}
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        aria-label="Search"
-        className="w-full px-3 py-2 rounded-lg bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)]"
-      />
+    <div className="space-y-4">
+      <div className="relative group">
+        <Search className="absolute left-3 top-2.5 w-4 h-4 text-[var(--text-muted)] group-focus-within:text-[var(--accent)] transition-colors" />
+        <input
+          type="text"
+          placeholder={placeholder}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          aria-label="Search"
+          className="w-full pl-10 pr-3 py-2 rounded-lg bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)] transition-all shadow-sm"
+        />
+        <div className="absolute right-3 top-2.5 pointer-events-none">
+            <span className="text-[10px] font-mono text-[var(--text-muted)] border border-[var(--border)] rounded px-1.5 py-0.5">CMD+K</span>
+        </div>
+      </div>
 
-      <p data-testid="result-count" className="text-xs text-[var(--text-muted)]">
-        {filtered.length} of {items.length} items
-      </p>
+      <div className="flex items-center justify-between text-xs text-[var(--text-muted)] px-1">
+        <span>Results</span>
+        <span data-testid="result-count" className="font-mono bg-[var(--bg-elevated)] px-2 py-0.5 rounded text-[var(--text-secondary)]">
+          {filtered.length} / {items.length}
+        </span>
+      </div>
 
       {filtered.length === 0 ? (
-        <p data-testid="no-results" className="text-sm text-[var(--text-muted)] text-center py-4">
-          No results found for "{query}"
-        </p>
+        <div data-testid="no-results" className="flex flex-col items-center justify-center py-8 text-[var(--text-muted)] border border-dashed border-[var(--border)] rounded-xl bg-[var(--bg-surface)]">
+            <Filter className="w-6 h-6 opacity-30 mb-2" />
+          <p className="text-sm">No results for "{query}"</p>
+        </div>
       ) : (
-        <ul className="space-y-2">
+        <ul className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
           {filtered.map((item, i) => (
-            <li key={i}>{renderItem(item)}</li>
+            <li key={i} className="animate-fade-in" style={{ animationDelay: `${i * 0.05}s` }}>
+                {renderItem(item)}
+            </li>
           ))}
         </ul>
       )}

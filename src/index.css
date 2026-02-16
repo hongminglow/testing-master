@@ -1,96 +1,167 @@
 @import "tailwindcss";
 
-/* ─── Design Tokens ─────────────────────────────────── */
+/* ─── Design System Tokens ─────────────────────────── */
 :root {
-  --bg-page: #0B0E14;
-  --bg-card: #111620;
-  --bg-card-hover: #161D2A;
-  --bg-sidebar: #0D1117;
-  --bg-input: #161D2A;
+  /* Backgrounds — depth & layering */
+  --bg-page: #030407;
+  --bg-surface: #090b11;
+  --bg-card: #0f1219;
+  --bg-card-hover: #161b26;
+  --bg-input: #121722;
+  --bg-elevated: #1c2433;
 
-  --text-primary: #E6EDF3;
-  --text-secondary: #8B949E;
-  --text-muted: #484F58;
+  /* Text — hierarchy & contrast */
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #64748b;
+  --text-dim: #475569;
 
-  --accent: #58A6FF;
-  --accent-soft: rgba(88, 166, 255, 0.1);
-  --accent-green: #3FB950;
-  --accent-green-soft: rgba(63, 185, 80, 0.1);
-  --accent-red: #F85149;
-  --accent-red-soft: rgba(248, 81, 73, 0.1);
-  --accent-yellow: #D29922;
-  --accent-yellow-soft: rgba(210, 153, 34, 0.1);
-  --accent-purple: #BC8CFF;
-  --accent-purple-soft: rgba(188, 140, 255, 0.1);
+  /* Brand Colors */
+  --accent: #38bdf8;
+  --accent-hover: #7dd3fc;
+  --accent-soft: rgba(56, 189, 248, 0.08);
+  --accent-glow: rgba(56, 189, 248, 0.05);
 
-  --border: #21262D;
-  --border-accent: rgba(88, 166, 255, 0.3);
+  --brand-green: #10b981;
+  --brand-green-soft: rgba(16, 185, 129, 0.1);
+  --brand-green-border: rgba(16, 185, 129, 0.2);
 
-  --radius-card: 12px;
-  --radius-btn: 8px;
+  --brand-red: #f43f5e;
+  --brand-red-soft: rgba(244, 63, 94, 0.1);
+  --brand-red-border: rgba(244, 63, 94, 0.2);
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+  --brand-purple: #818cf8;
+  --brand-purple-soft: rgba(129, 140, 248, 0.1);
+
+  --brand-yellow: #fbbf24;
+  --brand-yellow-soft: rgba(251, 191, 36, 0.1);
+
+  /* Spacing & Borders */
+  --border: rgba(148, 163, 184, 0.15); /* Increased opacity */
+  --border-subtle: rgba(148, 163, 184, 0.08);
+  --border-strong: rgba(148, 163, 184, 0.25);
+  --border-accent: rgba(56, 189, 248, 0.3);
+
+  /* Radius */
+  --radius-button: 10px;
+  --radius-card: 18px;
+  --radius-input: 12px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
 }
 
-@font-face {
-  font-family: "Inter";
-  src: url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+/* ─── Global Base ──────────────────────────────────── */
+@layer base {
+  body {
+    @apply bg-[var(--bg-page)] text-[var(--text-primary)] antialiased selection:bg-[var(--accent-soft)] selection:text-[var(--accent)];
+    font-family: "Inter", sans-serif;
+  }
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* ─── Layout Components ────────────────────────────── */
 
-html, body, #root {
-  height: 100%;
-  font-family: var(--font-sans);
-  background-color: var(--bg-page);
-  color: var(--text-primary);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Hero background with subtle animated mesh */
+.hero-mesh {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bg-surface);
 }
 
-/* ─── Scrollbar ─────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
+.hero-mesh::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(56, 189, 248, 0.04) 0%,
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 20% 30%,
+      rgba(129, 140, 248, 0.03) 0%,
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 80% 70%,
+      rgba(16, 185, 129, 0.03) 0%,
+      transparent 35%
+    );
+  animation: mesh-float 20s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes mesh-float {
+  0% {
+    transform: rotate(0deg) translate(0, 0);
+  }
+  100% {
+    transform: rotate(5deg) translate(-2%, -2%);
+  }
+}
+
+/* Glass Card */
+.glass-card {
+  @apply bg-[var(--bg-card)] border border-[var(--border)] rounded-[var(--radius-card)] shadow-[var(--shadow-sm)] transition-all duration-300;
+}
+
+.glass-card:hover {
+  @apply border-[var(--border-strong)] shadow-[var(--shadow-md)] -translate-y-1 bg-[var(--bg-card-hover)];
+}
+
+/* Typography Helpers */
+.heading-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-[var(--accent)] to-[var(--brand-green)];
+}
+
+/* Section Divider */
+.hr-divider {
+  @apply h-px w-full bg-gradient-to-r from-transparent via-[var(--border)] to-transparent opacity-50 my-8;
+}
+
+/* ─── Badge Variants ───────────────────────────────── */
+.badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold tracking-wide border transition-all;
+}
+
+.badge-blue {
+  @apply bg-[var(--accent-soft)] text-[var(--accent)] border-[var(--border-accent)];
+}
+.badge-green {
+  @apply bg-[var(--brand-green-soft)] text-[var(--brand-green)] border-[var(--brand-green-border)];
+}
+.badge-red {
+  @apply bg-[var(--brand-red-soft)] text-[var(--brand-red)] border-[var(--brand-red-border)];
+}
+.badge-purple {
+  @apply bg-[var(--brand-purple-soft)] text-[var(--brand-purple)] border-indigo-500/20;
+}
+.badge-yellow {
+  @apply bg-[var(--brand-yellow-soft)] text-[var(--brand-yellow)] border-amber-500/20;
+}
+
+/* ─── Scrollbar ───────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-page);
+}
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 3px;
+  background: var(--bg-elevated);
+  border-radius: 4px;
 }
-::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
-
-/* ─── Utility classes ──────────────────────────── */
-.badge-pass {
-  background: var(--accent-green-soft);
-  color: var(--accent-green);
-  border: 1px solid rgba(63, 185, 80, 0.2);
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-dim);
 }
 
-.badge-fail {
-  background: var(--accent-red-soft);
-  color: var(--accent-red);
-  border: 1px solid rgba(248, 81, 73, 0.2);
+/* ─── Code Block ─────────────────────────────────── */
+.code-box {
+  @apply font-mono text-xs bg-[var(--bg-surface)] p-4 rounded-xl border border-[var(--border-subtle)] overflow-x-auto text-[var(--text-secondary)] opacity-80 hover:opacity-100 transition-opacity;
 }
-
-.badge-pending {
-  background: var(--accent-yellow-soft);
-  color: var(--accent-yellow);
-  border: 1px solid rgba(210, 153, 34, 0.2);
-}
-
-.code-block {
-  background: #0D1117;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-card);
-  padding: 20px;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  line-height: 1.7;
-  overflow-x: auto;
-  color: var(--text-secondary);
-}
-
-.code-block .keyword { color: #FF7B72; }
-.code-block .function { color: #D2A8FF; }
-.code-block .string { color: #A5D6FF; }
-.code-block .comment { color: #484F58; font-style: italic; }
-.code-block .matcher { color: #3FB950; font-weight: 600; }

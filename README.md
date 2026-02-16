@@ -2,7 +2,7 @@
 
 A comprehensive showcase of **Vitest** + **React Testing Library** for React applications. This project demonstrates every major testing pattern, syntax, and strategy you need to master frontend testing — from basic matchers to advanced mocking.
 
-> **Stack:** React 19 · TypeScript · Vitest · React Testing Library · Tailwind CSS · Vite
+> **Stack:** React 19 · TypeScript · Vitest · React Testing Library · Tailwind CSS · Lucide React · Vite
 
 ---
 

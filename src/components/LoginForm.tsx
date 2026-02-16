@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { Mail, Lock, AlertCircle, CheckCircle } from "lucide-react";
 
 export interface LoginFormData {
   email: string;
@@ -57,10 +58,13 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
     return (
       <div
         data-testid="success-message"
-        className="p-6 rounded-xl border border-[rgba(63,185,80,0.3)] bg-[var(--accent-green-soft)] text-center"
+        className="p-6 rounded-xl border border-[var(--accent-green-border)] bg-[var(--accent-green-soft)] text-center animate-fade-in"
       >
-        <p className="text-[var(--accent-green)] font-semibold">
-          ✓ Login successful!
+        <div className="flex items-center justify-center w-12 h-12 rounded-full border border-[var(--accent-green-border)] bg-[rgba(52,211,153,0.1)] mb-3 mx-auto">
+          <CheckCircle className="w-6 h-6 text-[var(--accent-green)]" />
+        </div>
+        <p className="text-[var(--accent-green)] font-semibold text-lg">
+          Login successful!
         </p>
       </div>
     );
@@ -70,56 +74,95 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
     <form
       onSubmit={handleSubmit}
       data-testid="login-form"
-      className="p-6 rounded-xl border border-[var(--border)] bg-[var(--bg-card)] space-y-4"
+      className="p-6 rounded-xl border border-[var(--border)] bg-[var(--bg-card)] shadow-sm space-y-4"
       noValidate
     >
-      <h3 className="text-lg font-semibold text-[var(--text-primary)]">
-        Sign In
-      </h3>
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-lg font-semibold text-[var(--text-primary)] tracking-tight">
+          Sign In
+        </h3>
+        <span className="text-xs text-[var(--text-muted)] italic">
+          Try any valid email
+        </span>
+      </div>
 
       {errors.form && (
-        <div role="alert" className="p-3 rounded-lg bg-[var(--accent-red-soft)] text-[var(--accent-red)] text-sm">
-          {errors.form}
+        <div
+          role="alert"
+          className="flex items-start gap-2 p-3 rounded-lg bg-[var(--accent-red-soft)] border border-[var(--accent-red-border)] text-[var(--accent-red)] text-sm animate-fade-in"
+        >
+          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+          <span>{errors.form}</span>
         </div>
       )}
 
       <div>
-        <label htmlFor="email" className="block text-sm text-[var(--text-secondary)] mb-1">
-          Email
+        <label
+          htmlFor="email"
+          className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5"
+        >
+          Email Address
         </label>
-        <input
-          id="email"
-          type="email"
-          placeholder="you@example.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          aria-invalid={!!errors.email}
-          aria-describedby={errors.email ? "email-error" : undefined}
-          className="w-full px-3 py-2 rounded-lg bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)]"
-        />
+        <div className="relative group">
+          <Mail className="absolute left-3 top-2.5 w-4 h-4 text-[var(--text-muted)] group-focus-within:text-[var(--accent)] transition-colors" />
+          <input
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? "email-error" : undefined}
+            className={`w-full pl-10 pr-3 py-2 rounded-lg bg-[var(--bg-input)] border text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)] focus:outline-none focus:bg-[var(--bg-elevated)] transition-all ${
+              errors.email
+                ? "border-[var(--accent-red)] focus:ring-1 focus:ring-[var(--accent-red)]"
+                : "border-[var(--border)] focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]"
+            }`}
+          />
+        </div>
         {errors.email && (
-          <p id="email-error" role="alert" className="mt-1 text-xs text-[var(--accent-red)]">
+          <p
+            id="email-error"
+            role="alert"
+            className="mt-1 text-xs text-[var(--accent-red)] flex items-center gap-1 animate-fade-in"
+          >
+            <AlertCircle className="w-3 h-3" />
             {errors.email}
           </p>
         )}
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-sm text-[var(--text-secondary)] mb-1">
+        <label
+          htmlFor="password"
+          className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5"
+        >
           Password
         </label>
-        <input
-          id="password"
-          type="password"
-          placeholder="••••••••"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          aria-invalid={!!errors.password}
-          aria-describedby={errors.password ? "password-error" : undefined}
-          className="w-full px-3 py-2 rounded-lg bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)]"
-        />
+        <div className="relative group">
+          <Lock className="absolute left-3 top-2.5 w-4 h-4 text-[var(--text-muted)] group-focus-within:text-[var(--accent)] transition-colors" />
+          <input
+            id="password"
+            type="password"
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            aria-invalid={!!errors.password}
+            aria-describedby={errors.password ? "password-error" : undefined}
+            className={`w-full pl-10 pr-3 py-2 rounded-lg bg-[var(--bg-input)] border text-[var(--text-primary)] text-sm placeholder:text-[var(--text-muted)] focus:outline-none focus:bg-[var(--bg-elevated)] transition-all ${
+              errors.password
+                ? "border-[var(--accent-red)] focus:ring-1 focus:ring-[var(--accent-red)]"
+                : "border-[var(--border)] focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]"
+            }`}
+          />
+        </div>
         {errors.password && (
-          <p id="password-error" role="alert" className="mt-1 text-xs text-[var(--accent-red)]">
+          <p
+            id="password-error"
+            role="alert"
+            className="mt-1 text-xs text-[var(--accent-red)] flex items-center gap-1 animate-fade-in"
+          >
+            <AlertCircle className="w-3 h-3" />
             {errors.password}
           </p>
         )}
@@ -128,9 +171,16 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full py-2.5 rounded-lg bg-[var(--accent)] text-white font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+        className="w-full py-2.5 rounded-lg bg-[var(--accent)] text-white font-semibold text-sm hover:bg-[var(--accent-hover)] active:scale-[0.98] transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 flex items-center justify-center gap-2 shadow-lg shadow-[var(--accent-glow)] mt-2"
       >
-        {isSubmitting ? "Signing in..." : "Sign In"}
+        {isSubmitting ? (
+          <>
+            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            Signing in...
+          </>
+        ) : (
+          "Sign In"
+        )}
       </button>
     </form>
   );

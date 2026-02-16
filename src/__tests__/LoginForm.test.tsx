@@ -28,10 +28,10 @@ describe("LoginForm", () => {
       render(<LoginForm onSubmit={mockSubmit} />);
 
       // getByLabelText — finds inputs by their associated <label>
-      expect(screen.getByLabelText("Email")).toBeInTheDocument();
+      expect(screen.getByLabelText("Email Address")).toBeInTheDocument();
       expect(screen.getByLabelText("Password")).toBeInTheDocument();
       expect(
-        screen.getByRole("button", { name: "Sign In" })
+        screen.getByRole("button", { name: "Sign In" }),
       ).toBeInTheDocument();
     });
 
@@ -39,10 +39,13 @@ describe("LoginForm", () => {
       render(<LoginForm onSubmit={mockSubmit} />);
 
       // toHaveAttribute — checks HTML attribute value
-      expect(screen.getByLabelText("Email")).toHaveAttribute("type", "email");
+      expect(screen.getByLabelText("Email Address")).toHaveAttribute(
+        "type",
+        "email",
+      );
       expect(screen.getByLabelText("Password")).toHaveAttribute(
         "type",
-        "password"
+        "password",
       );
     });
 
@@ -51,7 +54,7 @@ describe("LoginForm", () => {
 
       // getByPlaceholderText — finds by placeholder attribute
       expect(
-        screen.getByPlaceholderText("you@example.com")
+        screen.getByPlaceholderText("you@example.com"),
       ).toBeInTheDocument();
       expect(screen.getByPlaceholderText("••••••••")).toBeInTheDocument();
     });
@@ -64,7 +67,7 @@ describe("LoginForm", () => {
       const user = userEvent.setup();
       render(<LoginForm onSubmit={mockSubmit} />);
 
-      const emailInput = screen.getByLabelText("Email");
+      const emailInput = screen.getByLabelText("Email Address");
 
       // user.type — simulates typing characters one by one
       await user.type(emailInput, "test@example.com");
@@ -85,7 +88,7 @@ describe("LoginForm", () => {
       const user = userEvent.setup();
       render(<LoginForm onSubmit={mockSubmit} />);
 
-      const emailInput = screen.getByLabelText("Email");
+      const emailInput = screen.getByLabelText("Email Address");
       await user.type(emailInput, "wrong@test.com");
 
       // user.clear — clears the input field
@@ -121,7 +124,7 @@ describe("LoginForm", () => {
       const user = userEvent.setup();
       render(<LoginForm onSubmit={mockSubmit} />);
 
-      await user.type(screen.getByLabelText("Email"), "not-an-email");
+      await user.type(screen.getByLabelText("Email Address"), "not-an-email");
       await user.type(screen.getByLabelText("Password"), "password123");
       await user.click(screen.getByRole("button", { name: "Sign In" }));
 
@@ -133,12 +136,15 @@ describe("LoginForm", () => {
       const user = userEvent.setup();
       render(<LoginForm onSubmit={mockSubmit} />);
 
-      await user.type(screen.getByLabelText("Email"), "test@example.com");
+      await user.type(
+        screen.getByLabelText("Email Address"),
+        "test@example.com",
+      );
       await user.type(screen.getByLabelText("Password"), "abc");
       await user.click(screen.getByRole("button", { name: "Sign In" }));
 
       expect(
-        screen.getByText("Password must be at least 6 characters")
+        screen.getByText("Password must be at least 6 characters"),
       ).toBeInTheDocument();
     });
 
@@ -149,9 +155,9 @@ describe("LoginForm", () => {
       await user.click(screen.getByRole("button", { name: "Sign In" }));
 
       // aria-invalid is set to "true" on invalid fields
-      expect(screen.getByLabelText("Email")).toHaveAttribute(
+      expect(screen.getByLabelText("Email Address")).toHaveAttribute(
         "aria-invalid",
-        "true"
+        "true",
       );
     });
   });
@@ -165,7 +171,10 @@ describe("LoginForm", () => {
       mockSubmit.mockResolvedValue(undefined);
       render(<LoginForm onSubmit={mockSubmit} />);
 
-      await user.type(screen.getByLabelText("Email"), "test@example.com");
+      await user.type(
+        screen.getByLabelText("Email Address"),
+        "test@example.com",
+      );
       await user.type(screen.getByLabelText("Password"), "password123");
       await user.click(screen.getByRole("button", { name: "Sign In" }));
 
@@ -184,7 +193,7 @@ describe("LoginForm", () => {
       mockSubmit.mockResolvedValue(undefined);
       render(<LoginForm onSubmit={mockSubmit} />);
 
-      await user.type(screen.getByLabelText("Email"), "user@test.com");
+      await user.type(screen.getByLabelText("Email Address"), "user@test.com");
       await user.type(screen.getByLabelText("Password"), "pass123456");
       await user.click(screen.getByRole("button", { name: "Sign In" }));
 
@@ -200,13 +209,13 @@ describe("LoginForm", () => {
       mockSubmit.mockRejectedValue(new Error("Network error"));
       render(<LoginForm onSubmit={mockSubmit} />);
 
-      await user.type(screen.getByLabelText("Email"), "user@test.com");
+      await user.type(screen.getByLabelText("Email Address"), "user@test.com");
       await user.type(screen.getByLabelText("Password"), "pass123456");
       await user.click(screen.getByRole("button", { name: "Sign In" }));
 
       await waitFor(() => {
         expect(
-          screen.getByText("Login failed. Please try again.")
+          screen.getByText("Login failed. Please try again."),
         ).toBeInTheDocument();
       });
     });
@@ -219,11 +228,11 @@ describe("LoginForm", () => {
         () =>
           new Promise<void>((resolve) => {
             resolveSubmit = resolve;
-          })
+          }),
       );
 
       render(<LoginForm onSubmit={mockSubmit} />);
-      await user.type(screen.getByLabelText("Email"), "user@test.com");
+      await user.type(screen.getByLabelText("Email Address"), "user@test.com");
       await user.type(screen.getByLabelText("Password"), "pass123456");
       await user.click(screen.getByRole("button", { name: "Sign In" }));
 

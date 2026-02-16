@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Plus, Minus, RotateCcw } from "lucide-react";
 
 interface CounterProps {
   initialCount?: number;
@@ -28,27 +29,43 @@ export function Counter({
     onCountChange?.(newCount);
   };
 
+  const isMax = max !== undefined && count >= max;
+
   return (
     <div
       data-testid="counter-container"
-      className="p-6 rounded-xl border border-[var(--border)] bg-[var(--bg-card)]"
+      className="p-6 rounded-xl border border-[var(--border)] bg-[var(--bg-card)] shadow-sm"
     >
-      <h3 className="text-sm font-medium text-[var(--text-secondary)] mb-3">
-        {label}
-      </h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-sm font-medium text-[var(--text-secondary)]">
+          {label}
+        </h3>
+        {count !== 0 && (
+          <button
+            onClick={() => update(0)}
+            data-testid="reset-button"
+            className="flex items-center gap-1.5 text-xs text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors cursor-pointer px-2 py-1 rounded-md hover:bg-[var(--accent-soft)]"
+          >
+            <RotateCcw className="w-3 h-3" />
+            Reset
+          </button>
+        )}
+      </div>
 
       <div className="flex items-center gap-4">
         <button
           onClick={() => update(count - step)}
           aria-label="Decrement"
-          className="w-10 h-10 rounded-lg bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-primary)] font-bold hover:border-[var(--accent)] transition-colors cursor-pointer"
+          className="flex items-center justify-center w-10 h-10 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text-primary)] hover:border-[var(--accent)] hover:text-[var(--accent)] hover:bg-[var(--bg-card-hover)] transition-all cursor-pointer active:scale-95"
         >
-          −
+          <Minus className="w-5 h-5" />
         </button>
 
         <span
           data-testid="count-display"
-          className="text-3xl font-bold text-[var(--text-primary)] tabular-nums min-w-[60px] text-center"
+          className={`text-3xl font-bold tabular-nums min-w-[60px] text-center transition-colors ${
+            isMax ? "text-[var(--accent-red)]" : "text-[var(--text-primary)]"
+          }`}
         >
           {count}
         </span>
@@ -56,27 +73,17 @@ export function Counter({
         <button
           onClick={() => update(count + step)}
           aria-label="Increment"
-          disabled={max !== undefined && count >= max}
-          className="w-10 h-10 rounded-lg bg-[var(--bg-input)] border border-[var(--border)] text-[var(--text-primary)] font-bold hover:border-[var(--accent)] transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+          disabled={isMax}
+          className="flex items-center justify-center w-10 h-10 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text-primary)] hover:border-[var(--accent)] hover:text-[var(--accent)] hover:bg-[var(--bg-card-hover)] transition-all cursor-pointer active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-[var(--border)] disabled:hover:text-[var(--text-primary)] disabled:hover:bg-[var(--bg-elevated)]"
         >
-          +
+          <Plus className="w-5 h-5" />
         </button>
       </div>
 
-      {count !== 0 && (
-        <button
-          onClick={() => update(0)}
-          data-testid="reset-button"
-          className="mt-3 text-xs text-[var(--accent)] hover:underline cursor-pointer"
-        >
-          Reset
-        </button>
-      )}
-
-      {max !== undefined && count >= max && (
+      {isMax && (
         <p
           role="alert"
-          className="mt-2 text-xs text-[var(--accent-red)]"
+          className="mt-3 text-xs font-medium text-[var(--accent-red)] bg-[var(--accent-red-soft)] px-3 py-1.5 rounded-md inline-block border border-[var(--accent-red-border)] animate-fade-in"
         >
           Maximum value reached!
         </p>

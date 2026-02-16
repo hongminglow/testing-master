@@ -189,7 +189,7 @@ describe("UserList", () => {
       render(<UserList fetchUsers={fetchUsers} />);
 
       expect(screen.getByTestId("loading-spinner")).toBeInTheDocument();
-      expect(screen.getByText("Loading users...")).toBeInTheDocument();
+      expect(screen.getByText("Fetching users...")).toBeInTheDocument();
     });
   });
 
@@ -210,7 +210,7 @@ describe("UserList", () => {
       expect(listScope.getByText("Charlie Brown")).toBeInTheDocument();
 
       // Check the count in the heading
-      expect(listScope.getByText("Users (3)")).toBeInTheDocument();
+      expect(listScope.getByText(/3 results/)).toBeInTheDocument();
     });
 
     it("calls fetchUsers on mount", async () => {
